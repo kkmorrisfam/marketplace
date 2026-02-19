@@ -7,6 +7,7 @@ import "./globals.css";
 
 // Fonts
 import { Inter, Barlow } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 const interFont = Inter({ subsets: ["latin"]});
 const barlowFont = Barlow({
   subsets: ['latin'],
@@ -26,11 +27,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${interFont.className} ${barlowFont.variable}`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+            
+          {children}
+        </ThemeProvider>
+
+    
       </body>
     </html>
   );

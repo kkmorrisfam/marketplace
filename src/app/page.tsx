@@ -1,10 +1,16 @@
+import ThemeToggle from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
+// import { ThemeProvider } from "next-themes";
 
 
 export default function Home() {
-  return (<div>
+  return (
+  <div className="p-5">
+    <div className="w-100 flex justify-end " >
+      <ThemeToggle />
+    </div>
     <h1 className="font-bold text-blue-500 font-barlow">Welcome to start page.</h1>
-    <Button>Click here</Button>
+        <Button>Click here</Button>
   </div>
   );
 }
