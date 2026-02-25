@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # bun.lock   # add to github repo - yes
+/src/generated/prisma
