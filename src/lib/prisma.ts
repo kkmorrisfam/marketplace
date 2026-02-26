@@ -13,7 +13,14 @@ function makePrisma() {
             password: process.env.DATABASE_PASSWORD!,
             database: process.env.DATABASE_NAME!,
         
-            connectionLimit: 5,     
+            connectionLimit: 5,    
+             // Fix MySQL 8 auth handshake issue
+            allowPublicKeyRetrieval: true,
+
+            // Often needed on hosted DBs (try with and without)
+            // ssl: { rejectUnauthorized: false },
+            
+
         });
 
         return new PrismaClient({ adapter });

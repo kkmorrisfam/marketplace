@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getSessionCookie } from "@/lib/auth/cookies";
-import { getUserFromSessionToken } from "@/lib/auth/session";
+import { getSessionCookie, setSessionCookie } from "@/lib/auth/cookies";
+import { getUserFromSessionToken, touchSession } from "@/lib/auth/session";
 
 export async function GET() {
     const token = await getSessionCookie();
@@ -8,6 +8,14 @@ export async function GET() {
 
     const user = await getUserFromSessionToken(token);
     if(!user) return NextResponse.json({user: null}, {status: 200});
+
+    //check to see if last time user session recorded an event and if 
+    // it was recent, refresh token
+    const touched = await touchSession(token);
+    //if session returned, set cookie with token
+    if (touched && touched.refreshed) {
+        await setSessionCookie(token, touched.expiresAt);
+    }
 
     return NextResponse.json(
         {
@@ -20,6 +28,8 @@ export async function GET() {
                 role: user.role,
             },
         },
-        { status: 200}
+        { status: 200,
+            headers: { "Cache-Control": "no-store"},
+        }
     );
 }

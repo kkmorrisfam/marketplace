@@ -66,7 +66,9 @@ export async function POST(req: Request) {
         
         return NextResponse.json({user}, {status: 201});
     } catch (err: unknown) {
+        console.error("REGISTER ERROR: ", err);
         const code = (err as { code?: string })?.code;
+        
         //Prisma unique constraint violation
         if(code === "P2002") {
             return NextResponse.json(

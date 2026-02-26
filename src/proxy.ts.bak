@@ -1,5 +1,5 @@
 // not currently using clerk for project
-/**
+
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ export default clerkMiddleware((auth, req, next)=>{
   const protectedRoute=createRouteMatcher(["/"]);
   if (protectedRoute(req)) auth.protect();
 
-  let response = NextResponse.next();
+  const response = NextResponse.next();
 });
 
 export const config = {
@@ -20,4 +20,3 @@ export const config = {
   ],
 }; 
 
- */
