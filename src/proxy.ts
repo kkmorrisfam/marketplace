@@ -1,4 +1,6 @@
- import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+// not currently using clerk for project
+/**
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 export default clerkMiddleware((auth, req, next)=>{
@@ -17,3 +19,5 @@ export const config = {
     '/(api|trpc)(.*)',
   ],
 }; 
+
+ */
