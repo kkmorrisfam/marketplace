@@ -4,6 +4,9 @@ import { prisma } from '../prisma';
 const SESSION_TTL_DAYS = 30;
 const ROLLING_REFRESH_HOURS = 12;  // only extend at most twice/day
 
+type TouchResult = 
+    | { refreshed: false; expiresAt: Date }
+    | { refreshed: true; token: string; expiresAt: Date }
 
 // helper function to create hash
 function sha256Base64Url(input: string) {
@@ -13,7 +16,7 @@ function sha256Base64Url(input: string) {
 
 
 // use when user still using site
-export async function touchSession(token: string) {
+export async function touchSession(token: string) : Promise<TouchResult | null> {
     const sessionHash = sha256Base64Url(token)
 
     // check to see if there's a matching session in table
@@ -27,7 +30,7 @@ export async function touchSession(token: string) {
     const lastSeenAt = session.lastSeenAt ?? session.createdAt;
     const hoursSinceSeen = (Date.now() - lastSeenAt.getTime()) / (1000 * 60 * 60);
 
-
+/*  // Code block just replaces expiration time
     const LAST_SEEN_WRITE_HOURS = 1;
 
     if (hoursSinceSeen < ROLLING_REFRESH_HOURS) {
@@ -52,7 +55,35 @@ export async function touchSession(token: string) {
     });
 
     return { expiresAt: updated.expiresAt, refreshed: true};
+*/
+    // Code block checks if time for refresh, if so create new token
+    // and delete old token with new exiry
 
+    // Not time to refresh yet
+    if (hoursSinceSeen < ROLLING_REFRESH_HOURS) {
+        return { refreshed: false, expiresAt: session.expiresAt };
+    }
+
+    // Rotate: new token + new row, delete old row
+    const newToken = generateSessionToken();
+    const newSessionHash = sha256Base64Url(newToken);
+
+    const newExpiresAt = new Date();
+    newExpiresAt.setDate(newExpiresAt.getDate() + SESSION_TTL_DAYS);
+
+    await prisma.$transaction([
+        prisma.session.create({
+            data: {
+                userId: session.userId,
+                sessionHash: newSessionHash,
+                expiresAt: newExpiresAt,
+                lastSeenAt: new Date(),
+            },
+        }),
+        prisma.session.delete( { where: { sessionHash } }),
+    ]);
+
+    return { refreshed: true, token: newToken, expiresAt: newExpiresAt };
 }
 
 

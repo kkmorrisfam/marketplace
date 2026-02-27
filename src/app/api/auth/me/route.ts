@@ -12,9 +12,12 @@ export async function GET() {
     //check to see if last time user session recorded an event and if 
     // it was recent, refresh token
     const touched = await touchSession(token);
+
     //if session returned, set cookie with token
-    if (touched && touched.refreshed) {
-        await setSessionCookie(token, touched.expiresAt);
+    if (touched &&  touched.refreshed) {
+        await setSessionCookie(touched.token, touched.expiresAt);  //update token and expiry
+    } else if (touched) {
+        await setSessionCookie(token, touched.expiresAt)  //keep same token, update expiry
     }
 
     return NextResponse.json(
