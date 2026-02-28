@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-// import {  ClerkProvider } from '@clerk/nextjs';
+
 import "./globals.css";
 import { Inter, Barlow } from "next/font/google";
 import { ThemeProvider } from "next-themes";

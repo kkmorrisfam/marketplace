@@ -1,7 +1,6 @@
 import ThemeToggle from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
-// import { UserButton } from "@clerk/nextjs";
-// import { ThemeProvider } from "next-themes";
+
 
 
 export default function Home() {
