@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import {  ClerkProvider } from '@clerk/nextjs';
+// import {  ClerkProvider } from '@clerk/nextjs';
 import "./globals.css";
 import { Inter, Barlow } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${interFont.className} ${barlowFont.variable}`}
@@ -44,6 +44,6 @@ export default function RootLayout({
       
         </body>
       </html>
-    </ClerkProvider>
+    
   );
 }

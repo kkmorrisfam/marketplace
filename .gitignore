@@ -42,3 +42,6 @@ next-env.d.ts
 
 # bun.lock   # add to github repo - yes
 /src/generated/prisma
+
+# clerk configuration (can include secrets)
+/.clerk/

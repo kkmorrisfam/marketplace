@@ -1,24 +1,26 @@
 import { NextResponse } from "next/server";
-import { getSessionCookie, setSessionCookie } from "@/lib/auth/cookies";
+import { clearSessionCookie, getSessionCookie, setSessionCookie } from "@/lib/auth/cookies";
 import { getUserFromSessionToken, touchSession } from "@/lib/auth/session";
 
 export async function GET() {
     const token = await getSessionCookie();
     if(!token) return NextResponse.json({user: null}, {status: 200});
 
+
     const user = await getUserFromSessionToken(token);
-    if(!user) return NextResponse.json({user: null}, {status: 200});
+    if(!user) {
+        clearSessionCookie(); 
+        return NextResponse.json({user: null}, {status: 200});
+    }
 
     //check to see if last time user session recorded an event and if 
     // it was recent, refresh token
     const touched = await touchSession(token);
 
     //if session returned, set cookie with token
-    if (touched &&  touched.refreshed) {
+    if (touched?.refreshed) {
         await setSessionCookie(touched.token, touched.expiresAt);  //update token and expiry
-    } else if (touched) {
-        await setSessionCookie(token, touched.expiresAt)  //keep same token, update expiry
-    }
+    } 
 
     return NextResponse.json(
         {
