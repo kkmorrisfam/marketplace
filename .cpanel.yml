@@ -2,4 +2,5 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/kerriweb/marketplace_app
+    - /bin/mkdir -p $DEPLOYPATH
     - /bin/rsync -av --delete ./ $DEPLOYPATH
