@@ -1,6 +1,5 @@
 {
-  "compilerOptions": {
-    "types": ["bun-types"],
+  "compilerOptions": {    
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -29,7 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "src/proxy.ts.bak"  ],
+    "**/*.mts",
+  ],
   "exclude": ["node_modules"]
 }
