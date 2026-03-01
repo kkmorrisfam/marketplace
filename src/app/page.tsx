@@ -10,7 +10,7 @@ export default function Home() {
    
       <ThemeToggle />
     </div>
-    <h1 className="font-bold text-blue-500 font-barlow">Welcome to start page.  We are just testing.</h1>
+    <h1 className="font-bold text-blue-500 font-barlow">Welcome to the start page.  We are just testing.</h1>
         <Button>Click here</Button>
   </div>
   );
