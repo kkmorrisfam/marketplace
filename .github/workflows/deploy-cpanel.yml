@@ -1,0 +1,63 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (Webpack)
+        run: npm run build
+
+      # Optional: generate Prisma client during CI if you rely on src/generated output
+      # - name: Prisma generate
+      #   run: npx prisma generate
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.CPANEL_SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          ssh-keyscan -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy files via rsync
+        run: |
+          rsync -az --delete \
+            --exclude ".git" \
+            --exclude "node_modules" \
+            --exclude ".env" \
+            --exclude ".next/cache" \
+            ./ \
+            "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_DEPLOY_PATH }}/"
+
+      - name: Install production deps on server + restart
+        run: |
+          ssh "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}" << 'EOF'
+            set -e
+            cd "${{ secrets.CPANEL_DEPLOY_PATH }}"
+
+            # Use cPanel Node venv npm explicitly:
+            VENV_BIN="/home/kerriweb/nodevenv/marketplace_app/20/bin"
+            "$VENV_BIN/npm" ci
+
+            # restart passenger app (cPanel Node apps usually respond to this)
+            mkdir -p tmp
+            touch tmp/restart.txt
+          EOF
