@@ -40,11 +40,20 @@ jobs:
       - name: Deploy files via rsync
         run: |
           rsync -az --delete \
-            --exclude ".git" \
-            --exclude "node_modules" \
+            --exclude ".git/" \
+            --exclude ".github/" \
+            --exclude "node_modules/" \
             --exclude ".env" \
-            --exclude ".next/cache" \
+            --exclude ".env.*" \
+            --exclude ".next/cache/" \
+            --exclude ".next/trace" \
+            --exclude "tmp/" \
+            --exclude "logs/" \
+            --exclude "stderr.log" \
+            --exclude "stdout.log" \
+            --exclude "*.log" \            
             ./ \
+            "${GITHUB_WORKSPACE}/" \
             "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_DEPLOY_PATH }}/"
 
       - name: Install production deps on server + restart
