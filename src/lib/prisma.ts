@@ -20,8 +20,14 @@ function makePrisma() {
             // Often needed on hosted DBs (try with and without)
             // ssl: { rejectUnauthorized: false },
             
+            
 
         });
+
+        console.log("DB HOST:", process.env.DATABASE_HOST);
+        console.log("DB PORT:", process.env.DATABASE_PORT);
+        console.log("DB NAME:", process.env.DATABASE_NAME);
+        console.log("NODE_ENV:", process.env.NODE_ENV);
 
         return new PrismaClient({ adapter });
 }

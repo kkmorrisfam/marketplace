@@ -9,8 +9,8 @@ async function main() {
     password: process.env.DATABASE_PASSWORD!,
     database: process.env.DATABASE_NAME!,
     connectionLimit: 1,
-    connectTimeout: 20000,
-    acquireTimeout: 20000,
+    connectTimeout: 80000,
+    acquireTimeout: 80000,
 
      // ✅ Fix MySQL 8 auth handshake issue
     allowPublicKeyRetrieval: true,

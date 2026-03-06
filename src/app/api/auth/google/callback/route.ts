@@ -66,8 +66,8 @@ export async function GET(req: Request) {
         return NextResponse.json({error: "Missing Google identity fields."}, {status: 400});
     }
 
-    //***check this later against prisma generate fields */
-    const provider = "GOOGLE"; // must match AuthProvider enum value
+    //***must match prisma generate fields,  AuthProvider enum value */
+    const provider = "GOOGLE"; 
 
     // if account exists, use it
     const existingAccount = await prisma.oAuthAccount.findUnique({
@@ -89,6 +89,7 @@ export async function GET(req: Request) {
                     email,
                     emailVerified: emailVerified ? new Date() : null,
                     firstName,
+                    lastName,
                     imageUrl: picture,
                     displayName: [firstName, lastName].filter(Boolean).join(" ") || null,
                     passwordHash: null,
