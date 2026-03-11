@@ -13,7 +13,7 @@ const baseOptions = {
 
 
 // jar becomes a request/response bound cookie store provided by Next.js in the App Router
-// await cookies() returns a getting an object connected to response/request
+// await cookies() returns an object connected to response/request
 // then with jar.set you are modifying the http response headers
 // adding a Set-Cookie header
 export async function setOauthCookies(state: string, verifier: string) {
@@ -32,6 +32,7 @@ export async function readOauthCookies() {
     };
 }
 
+// Clears state parameter and expires cookies
 export async function clearOauthCookies() {
     const jar = await cookies();
     const options = { ...baseOptions, expires: new Date(0), maxAge: 0};

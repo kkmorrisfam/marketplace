@@ -18,7 +18,9 @@ type FacebookMe = {
     picture?: { data?: { url?: string}};
 };
 
+//Facebook sends back a code. I need to exchange it for the access token at Facebook
 async function exchangeCodeForAccessToken(code: string) {
+    // create params to send back to Facebook
     const params = new URLSearchParams({
         client_id: process.env.FACEBOOK_CLIENT_ID!,
         client_secret: process.env.FACEBOOK_CLIENT_SECRET!,
@@ -26,6 +28,7 @@ async function exchangeCodeForAccessToken(code: string) {
         code,
     });
 
+    // send code back with client id and secret - should match
     const response = await fetch(
         `https://graph.facebook.com/v19.0/oauth/access_token?${params.toString()}`,
         {method: "GET"}
@@ -36,6 +39,9 @@ async function exchangeCodeForAccessToken(code: string) {
         throw new Error(`Facebook token exchange failed: ${txt}`);
     }
 
+    // if everthing ok, return json in response as a Promise, 
+    // because it's waiting for data to finish loading over network
+    // and will contain an object conforming to type ExchangeToken
     return response.json() as Promise<ExchangeToken>;
 }
 
@@ -55,21 +61,29 @@ async function fetchFacebookProfile(accessToken: string) {
         throw new Error(`Facebook /me failed ${txt}`);
     }
 
+    // returns a promise of type FacebookMe when done as json
     return response.json() as Promise<FacebookMe>;
 }
 
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
+    // get the state from the url
     const returnedState = url.searchParams.get("state");
 
+    // returns object w/ state and verifier from request header "Set-Cookie" object
     const {state} = await readOauthCookies();
+    //clears state param and expires temp OAuth cookie, after retrieving state
     await clearOauthCookies();
 
+    // if Facebook doesn't return a code, or state from the cookie, 
+    // if there's no state from the url, or if the cookie state does not equal the url state
+    // protect against CSRF attack
     if(!code || !state || !returnedState || returnedState !== state) {
         return NextResponse.json({error: "Invalid Oauth state."}, {status: 400});
     }
 
+    // get an access token from Facebook after state check
     const tokenRes = await exchangeCodeForAccessToken(code);
     const profile = await fetchFacebookProfile(tokenRes.access_token);
 
