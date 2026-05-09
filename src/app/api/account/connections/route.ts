@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 export async function GET() { 
     const token = await getSessionCookie();
 
-    //check for vallid token
+    //check for valid token
     if (!token) {
         return NextResponse.json({error: "Unauthorized"}, { status: 401})
     }
