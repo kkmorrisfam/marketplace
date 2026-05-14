@@ -8,11 +8,10 @@ generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
-
+ 
+// addiitonal configuration in prisma.config.ts file
 datasource db {
   provider  = "mysql"
-  
- 
 }
 
 enum Role {
@@ -53,6 +52,7 @@ model User {
 
   @@index([email])  //make email an indexed field
 }
+
 
 model OAuthAccount {
   id String @id @default(cuid())  //primary key
