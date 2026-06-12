@@ -27,10 +27,12 @@ export async function GET() {
             user: {
                 id: user.id,
                 email: user.email,
+                displayName: user.displayName,
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: user.role,
+                imageUrl: user.imageUrl,
             },
         },
         { status: 200,
