@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,7 @@ export default function UserInfo({ user }:{user:User | null}) {
                         </span>
                         <span className='w-fit'>
                             <Badge variant="secondary" className='capitalize' >
-                                {role.toLocaleLowerCase()}
+                                {role?.toLocaleLowerCase()} Dashboard
                             </Badge>
                         </span>
                     </div>
