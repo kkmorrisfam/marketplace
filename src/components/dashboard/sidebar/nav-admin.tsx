@@ -1,14 +1,20 @@
+"use client"
+
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { icons } from "@/constants/icons";
 import { DashboardSidebarMenuInterface } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function SidebarNavAdmin({
     menuLinks,
   }: {
     menuLinks:DashboardSidebarMenuInterface[];
   }) {
+    const pathname = usePathname();
+    //console.log("pathname---> ", pathname);
+
     return (
       <nav className="relative grow">
         <Command className="rounded-lg overflow-visible bg-transparent">
@@ -23,7 +29,9 @@ export default function SidebarNavAdmin({
                         return (
                             <CommandItem 
                               key={index}
-                              className={cn("w-full h-12 cursor-pointer mt-1")}
+                              className={cn("w-full h-12 cursor-pointer mt-1",{
+                                "bg-accent text-accent-foreground":link.link===pathname,
+                              })}
                             >
                             <Link 
                               href={link.link} 
