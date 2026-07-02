@@ -23,7 +23,7 @@ export default function UserInfo({ user }:{user:User | null}) {
         `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}` ||
   
   user.email[0].toUpperCase();
-    const role = user.role;
+    const role = user?.role;
 
     return (
     <div>
