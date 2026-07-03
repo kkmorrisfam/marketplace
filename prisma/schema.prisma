@@ -8,10 +8,10 @@ generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
- 
+
 // addiitonal configuration in prisma.config.ts file
 datasource db {
-  provider  = "mysql"
+  provider = "mysql"
 }
 
 enum Role {
@@ -26,18 +26,18 @@ enum AuthProvider {
 }
 
 model User {
-  id String @id @default(cuid())  //primary key w/ cuid
+  id String @id @default(cuid()) //primary key w/ cuid
 
   // Core identity
-  email String @unique
+  email         String    @unique
   emailVerified DateTime?
-  username String? @unique    //will need to prompt for username
+  username      String?   @unique //will need to prompt for username
 
   //Profile
-  firstName String?
-  lastName  String?
-  displayName String? 
-  imageUrl String? @db.Text
+  firstName   String?
+  lastName    String?
+  displayName String?
+  imageUrl    String? @db.Text
 
   // Local auth (nullable = "social only" account)
   passwordHash String? @db.Text
@@ -47,23 +47,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts  OAuthAccount[]
-  sessions  Session[]
+  accounts OAuthAccount[]
+  sessions Session[]
 
-  @@index([email])  //make email an indexed field
+  @@index([email]) //make email an indexed field
 }
 
-
 model OAuthAccount {
-  id String @id @default(cuid())  //primary key
+  id String @id @default(cuid()) //primary key
 
-  userId  String
-  provider  AuthProvider
-  providerUserId  String // "sub for Google OIDC, id for FACEBOOK
-  createdAt DateTime @default(now())
+  userId         String
+  provider       AuthProvider
+  providerUserId String // "sub for Google OIDC, id for FACEBOOK
+  createdAt      DateTime     @default(now())
 
   // foreign key
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // constraints/index fields
   @@unique([provider, providerUserId])
@@ -71,16 +70,27 @@ model OAuthAccount {
 }
 
 model Session {
-  id  String  @id @default(cuid())
-  userId  String
-  sessionHash   String @unique  // store hash(token), not hash token
+  id          String    @id @default(cuid())
+  userId      String
+  sessionHash String    @unique // store hash(token), not hash token
   expiresAt   DateTime
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   lastSeenAt  DateTime?
 
   // foreign key
-  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+model Category {
+  id       String  @id @default(cuid())
+  name     String
+  image    String
+  url      String
+  featured Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
