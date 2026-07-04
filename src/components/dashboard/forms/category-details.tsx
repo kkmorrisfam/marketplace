@@ -15,6 +15,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import ImageUpload from "../shared/image-upload";
 
 //interface from Category schema already defined
 interface CategoryDetailsProps {
@@ -76,6 +77,30 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                         onSubmit={form.handleSubmit(handleSubmit)}
                         className="space-y-4"
                     >
+                        <FormField 
+                          control={form.control}
+                          name="image"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <ImageUpload
+                                    type="profile"
+                                    value={field.value.map((image) => image.url)}
+                                    disabled={isLoading}
+                                    onChange={(url) => field.onChange([{ url }])}
+                                    onRemove={(url) =>
+                                    field.onChange([
+                                        ...field.value.filter(
+                                        (current) => current.url !== url
+                                        ),
+                                    ])
+                                    }
+                                    upload_preset={upload_preset}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
                         <FormField disabled={isLoading}
                           control={form.control}
                           name="name"

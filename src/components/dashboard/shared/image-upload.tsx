@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FC, useEffect, useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 interface ImageUploadProps {
     disabled?: boolean;
@@ -14,11 +14,6 @@ interface ImageUploadProps {
     upload_preset: string;
 }
 
-type CloudinaryUploadResult = {
-    info: {
-        secure_url:string;
-    }
-}
 
 const ImageUpload: FC<ImageUploadProps> = ({
     disabled,
@@ -32,6 +27,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(()=>{
+         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMounted(true);
     }, []);
 
@@ -39,9 +35,14 @@ const ImageUpload: FC<ImageUploadProps> = ({
         return null;
     }
 
-    const onUpload = (result: CloudinaryUploadResult) => {
+    const onUpload = (result: CloudinaryUploadWidgetResults) => {
         console.log("onUpload result ", result);
-        onChange(result.info.secure_url);
+        if (
+            typeof result.info === "object" &&
+            "secure_url" in result.info
+        ) {
+             onChange(result.info.secure_url);
+        };       
     }
 
     //display image of profile type
