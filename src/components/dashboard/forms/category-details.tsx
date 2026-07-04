@@ -18,10 +18,11 @@ import { Button } from "@/components/ui/button";
 
 //interface from Category schema already defined
 interface CategoryDetailsProps {
-    data?:Category
+    data?:Category;
+    upload_preset: string;
 }
 
-const CategoryDetails: FC<CategoryDetailsProps> = ({data})=>{
+const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
     const form = useForm<
