@@ -44,7 +44,7 @@ export default async function AdminDashboardLayout({
     
     {/* Sidebar */}
     <Sidebar isAdmin user={user}/>
-    <div className="w-full ml-75">
+    <div className="ml-75">
         {/* Header */}
         <Header/>
         <div className="w-full mt-18.75 p-4"> {children}</div>
