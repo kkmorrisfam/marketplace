@@ -4,10 +4,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* This is for regular themes*/
 @theme {
   --font-barlow: "Barlow", sans-serif;
+  --color-blue-primary: #0D6EFD;
 }
 
+/* This is more for shadcn, references variables defined in root*/
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -24,6 +27,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+ 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -58,7 +62,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
   --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary-foreground: oklch(0.984 0.003 247.858);  
+  --blue-primary: #0D6EFD;
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
