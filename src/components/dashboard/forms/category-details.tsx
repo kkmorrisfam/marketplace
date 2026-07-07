@@ -16,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import ImageUpload from "../shared/image-upload";
+import { upsertCategory } from "@/queries/category";
+
+// messages
+import {useToast} from "@/components/ui/sonner";
 
 //interface from Category schema already defined
 interface CategoryDetailsProps {
@@ -24,6 +28,9 @@ interface CategoryDetailsProps {
 }
 
 const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
+    // Initialize necessary hooks
+    const { toast } = useToast()
+
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
     const form = useForm<
@@ -41,6 +48,7 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                 featured: data?.featured ?? false,
             },   
         });
+    
 
     // Loading status based on form submission
     const isLoading = form.formState.isSubmitting;
@@ -59,7 +67,31 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
 
     // Submit handler for form submission
     const handleSubmit = async(values:z.infer<typeof CategoryFormSchema>) => {
-        console.log(values);
+          // console.log(values);
+          try {
+            // Upserting category data
+            const response = await upsertCategory({
+             //id:data.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
+             id: data?.id,
+             name: values.name,
+             image: values.image[0].url,
+             url: values.url,
+             featured: values.featured,
+             // use database created date/time
+             //createdAt: new Date(), 
+             //updatedAt: new Date(),
+            })
+
+            // Display success message
+            toast({
+              //success by default
+              title: data?.id 
+              ? "Category has been updated."
+              : `Congratulations! "${response?.name}" is now officially createDecipheriv.`,
+            })
+          } catch (error) {
+            
+          }
     }
     return <AlertDialog>
         <Card className="w-full">

@@ -4,6 +4,8 @@ import "./globals.css";
 import { Inter, Barlow } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
+import { Toaster as SonnerToaster, Toaster } from "@/components/ui/sonner";
+
 // Fonts
 const interFont = Inter({ subsets: ["latin"]});
 const barlowFont = Barlow({
@@ -39,6 +41,8 @@ export default function RootLayout({
           >
               
             {children}
+            <Toaster />
+            <SonnerToaster position="bottom-left"/>
           </ThemeProvider>
 
       
