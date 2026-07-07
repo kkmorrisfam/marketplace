@@ -9,7 +9,7 @@
  * */
 
 import { getCurrentUser } from "@/lib/auth/current-user"
-import { Category } from "@/generated/prisma/client"; 
+//import { Category } from "@/generated/prisma/client"; 
 import { db } from "@/lib/db";
 
 // we only need the following fields for the form, not all of the Category fields
@@ -22,8 +22,8 @@ type UpsertCategoryInput = {
     featured: boolean;
 }
 
-
-export const upsertCategory=async(category: Category)=> {
+//export const upsertCategory=async(category: Category)=> {
+export const upsertCategory=async(category: UpsertCategoryInput)=> {
     try {
         //Get current user from session token
         const user = await getCurrentUser();
@@ -65,7 +65,8 @@ export const upsertCategory=async(category: Category)=> {
         }
 
         // Upsert category into the database
-        const categoryDetails = await db.category.upsert({
+        // can use this version if I manually create a cuid first, but we're letting the database do it.
+        /*const categoryDetails = await db.category.upsert({
             where: {
                 id: category.id,                
             },
@@ -73,6 +74,31 @@ export const upsertCategory=async(category: Category)=> {
             create: category,
         });
         return categoryDetails;
+        */
+
+        if (category.id) {
+            return await db.category.update({
+                where: {
+                id: category.id,
+                },
+                data: {
+                name: category.name,
+                image: category.image,
+                url: category.url,
+                featured: category.featured,
+                },
+            });
+        }
+
+        return await db.category.create({
+            data: {
+                name: category.name,
+                image: category.image,
+                url: category.url,
+                featured: category.featured,
+            },
+        });
+
     } catch (error) {
         // Log and re-throw any errors
         console.log(error);
