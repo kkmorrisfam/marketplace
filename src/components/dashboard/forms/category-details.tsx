@@ -19,7 +19,7 @@ import ImageUpload from "../shared/image-upload";
 import { upsertCategory } from "@/queries/category";
 
 // messages
-import {useToast} from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 //interface from Category schema already defined
 interface CategoryDetailsProps {
@@ -28,9 +28,7 @@ interface CategoryDetailsProps {
 }
 
 const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
-    // Initialize necessary hooks
-    const { toast } = useToast()
-
+    
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
     const form = useForm<
@@ -83,12 +81,11 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
             })
 
             // Display success message
-            toast({
-              //success by default
-              title: data?.id 
-              ? "Category has been updated."
-              : `Congratulations! "${response?.name}" is now officially createDecipheriv.`,
-            })
+            toast.success(
+              data?.id
+               ? "Category has been updated."
+               : `Congratulations! "${response?.name}" has been createed.`
+            );
           } catch (error) {
             
           }

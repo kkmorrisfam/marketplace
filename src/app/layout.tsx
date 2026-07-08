@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import "./globals.css";
+import "./globals.css";  
 import { Inter, Barlow } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
