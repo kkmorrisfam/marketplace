@@ -20,6 +20,7 @@ import { upsertCategory } from "@/queries/category";
 
 // messages
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 //interface from Category schema already defined
 interface CategoryDetailsProps {
@@ -28,7 +29,9 @@ interface CategoryDetailsProps {
 }
 
 const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
-    
+    // Hook for routing
+    const router = useRouter();
+
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
     const form = useForm<
@@ -86,8 +89,22 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                ? "Category has been updated."
                : `Congratulations! "${response?.name}" has been createed.`
             );
+
+            // Redirect or Refresh data
+            if (data?.id) {
+              router.refresh();
+            } else {
+              router.push("/dashboard/admin/categories");
+            }
           } catch (error) {
-            
+            // handling form submission errors
+            console.log(error);
+            toast.error("Oops!", {
+              description: 
+                error instanceof Error
+                ? error.message
+                : "An unexpected error occurred.",
+            })
           }
     }
     return <AlertDialog>

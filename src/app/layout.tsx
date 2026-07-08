@@ -41,7 +41,7 @@ export default function RootLayout({
           >
               
             {children}
-            <Toaster />
+            <Toaster />   {/* I don't know if I need this? */}
             <SonnerToaster position="bottom-left"/>
           </ThemeProvider>
 
