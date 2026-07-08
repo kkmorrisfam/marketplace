@@ -11,7 +11,7 @@ export default async function AdminDashboardLayout({
   }: {
       children: ReactNode;
   }) {
-
+ /**
    const user: User = {
   id: "test-admin-id",
   email: "admin@test.com",
@@ -27,7 +27,7 @@ export default async function AdminDashboardLayout({
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-    /**
+    */
     
     const user = await getCurrentUser();
     if (!user) {
@@ -37,7 +37,7 @@ export default async function AdminDashboardLayout({
     if (user.role !== "ADMIN") {
       redirect("/");
     }
-     */
+    
 
 
   return (<div className="w-full h-full">

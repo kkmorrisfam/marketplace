@@ -70,6 +70,7 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
     const handleSubmit = async(values:z.infer<typeof CategoryFormSchema>) => {
           // console.log(values);
           try {
+            console.log("FORM VALUES: ", values)
             // Upserting category data
             const response = await upsertCategory({
              //id:data.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
@@ -83,11 +84,13 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
              //updatedAt: new Date(),
             })
 
+            
+
             // Display success message
             toast.success(
               data?.id
                ? "Category has been updated."
-               : `Congratulations! "${response?.name}" has been createed.`
+               : `Congratulations! "${response?.name}" has been created.`
             );
 
             // Redirect or Refresh data
@@ -147,14 +150,14 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                             </FormItem>
                           )}
                         />
-                        <FormField disabled={isLoading}
+                        <FormField                         
                           control={form.control}
                           name="name"
                           render={({ field })=>(
                             <FormItem className="flex-1">
                               <FormLabel>Category name</FormLabel>
                               <FormControl>
-                                <Input placeholder="Name" {...field} /> 
+                                <Input placeholder="Name" {...field} disabled={isLoading} /> 
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -162,15 +165,14 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                             
                         />
 
-                        <FormField 
-                          disabled={isLoading}
+                        <FormField                           
                           control={form.control}
                           name="url"
                           render={( { field }) => (
                             <FormItem className="flex-1">
                                 <FormLabel>Category url</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="/category-url" {...field} />                                    
+                                    <Input placeholder="/category-url" {...field} disabled={isLoading}/>                                    
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -198,7 +200,9 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                             </FormItem>
                           )}
                         />
-                        <Button type="submit" disabled={isLoading}>
+                        <Button 
+                          type="submit" 
+                          disabled={isLoading}>
                           {isLoading
                             ? "loading..."
                             : data?.id

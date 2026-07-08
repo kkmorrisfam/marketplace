@@ -1,4 +1,4 @@
-
+"use server"
 
 /**  Function: upsertCategory
  * Description: Upserts a category into the database, updating if it exists or creating a new one if not.
@@ -38,12 +38,14 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
         if (!category) throw new Error("Please provide category data.");
 
         // Check for duplicate category name
+        /** 
         const existingCategory = await db.category.findFirst({
             where: {
                 AND: [
                     {
                         OR: [{name: category.name}, {url: category.url}],
                     },
+
                     {
                         NOT: {
                             id: category.id,
@@ -52,7 +54,27 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
                 ],
             },
         });
-
+*/
+        const existingCategory = await db.category.findFirst({
+            where: {
+                AND: [
+                {
+                    OR: [
+                    { name: category.name },
+                    { url: category.url },
+                    ],
+                },
+                category.id
+                    ? {
+                        NOT: {
+                        id: category.id,
+                        },
+                    }
+                    : {},
+                ],
+            },
+        });
+ 
         // Throw error if category name is a duplicate
         if (existingCategory) {
             let errorMessage="";
@@ -101,6 +123,7 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
 
     } catch (error) {
         // Log and re-throw any errors
-        console.log(error);
+        console.error(error);
+        throw error;
     }
 }
