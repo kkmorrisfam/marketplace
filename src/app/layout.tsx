@@ -5,6 +5,8 @@ import { Inter, Barlow } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import { Toaster as SonnerToaster, Toaster } from "@/components/ui/sonner";
+import ModalProvider from "@/providers/modal-provider";
+import { getCurrentUser } from "@/lib/auth/current-user";
 
 // Fonts
 const interFont = Inter({ subsets: ["latin"]});
@@ -13,6 +15,7 @@ const barlowFont = Barlow({
   weight: ['500', '700'],
   variable:"--font-barlow", // adding this allows its use in tailwind classes
 })
+
 
 // Metadata
 export const metadata: Metadata = {
@@ -40,7 +43,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
               
-            {children}
+            <ModalProvider>{children}</ModalProvider>
             <Toaster />   {/* I don't know if I need this? */}
             <SonnerToaster position="bottom-left"/>
           </ThemeProvider>

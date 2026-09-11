@@ -67,19 +67,21 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
     }, [data, form])
 
     // Submit handler for form submission
+    // need to conform to name, image, url, featured fields
     const handleSubmit = async(values:z.infer<typeof CategoryFormSchema>) => {
           // console.log(values);
           try {
             console.log("FORM VALUES: ", values)
             // Upserting category data
             const response = await upsertCategory({
-             //id:data.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
-             id: data?.id,
+             //id:data?.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
+             id: data?.id,   //if data has id, get it
+             // form values
              name: values.name,
              image: values.image[0].url,
              url: values.url,
              featured: values.featured,
-             // use database created date/time
+             // use database auto created date/time
              //createdAt: new Date(), 
              //updatedAt: new Date(),
             })

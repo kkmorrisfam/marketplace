@@ -37,33 +37,18 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
         // Check to see of category is provided
         if (!category) throw new Error("Please provide category data.");
 
-        // Check for duplicate category name
-        /** 
-        const existingCategory = await db.category.findFirst({
-            where: {
-                AND: [
-                    {
-                        OR: [{name: category.name}, {url: category.url}],
-                    },
-
-                    {
-                        NOT: {
-                            id: category.id,
-                        }
-                    }
-                ],
-            },
-        });
-*/
+        // Check for duplicate category name or URL    
         const existingCategory = await db.category.findFirst({
             where: {
                 AND: [
                 {
+                    // check for either same name or url
                     OR: [
                     { name: category.name },
                     { url: category.url },
                     ],
                 },
+                // is the catetory id there?
                 category.id
                     ? {
                         NOT: {
@@ -97,7 +82,8 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
         });
         return categoryDetails;
         */
-
+        
+        // Upsert category into the database
         if (category.id) {
             return await db.category.update({
                 where: {
@@ -126,4 +112,22 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
         console.error(error);
         throw error;
     }
+}
+
+/**
+ * Function: getAllCategories
+ * Description: Retrives all cateories from the database.
+ * Permission level: public
+ * Returns: Array of categories sorted by updatedAt date in descending order.
+ */
+
+export const getAllCategories = async()=>{
+    // Retrieve all categires from the database
+    const categories = await db.category.findMany({
+        orderBy: {
+            updatedAt: "desc",
+        },
+    });
+    return categories;
+
 }

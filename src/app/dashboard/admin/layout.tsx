@@ -1,7 +1,6 @@
-/** Remove test user and uncomment out getCurrentUser & redirect block after connection to CPanel returns */
 import Header from "@/components/dashboard/header/header";
 import Sidebar from "@/components/dashboard/sidebar/sidebar";
-import { User } from "@/generated/prisma/client";
+//import { User } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
@@ -11,7 +10,10 @@ export default async function AdminDashboardLayout({
   }: {
       children: ReactNode;
   }) {
+
+ /** Remove test user and uncomment out getCurrentUser & redirect block after connection to CPanel returns */   
  /**
+  * //used to mock ADMIN User
    const user: User = {
   id: "test-admin-id",
   email: "admin@test.com",
