@@ -25,7 +25,8 @@ import {
   columnFilteringFeature,
   columnVisibilityFeature,
   createFilteredRowModel,
-  rowSelectionFeature,  
+  rowSelectionFeature,
+
 
   //getCoreRowModel,  // included in tableFeatures
   //getFilteredRowModel,  //replaced by CreateFilteredRowModel?
@@ -38,6 +39,10 @@ import { FilePlus2, Search } from "lucide-react";
 // Modal provider hook
 import { useModal } from "@/providers/modal-provider";
 import Link from "next/link";
+
+// import features
+import { features } from "@/lib/types";
+
 
 // Props interface for the table component
 interface DataTableProps<TData extends RowData> {
@@ -53,12 +58,12 @@ interface DataTableProps<TData extends RowData> {
   noHeader?: true;
 }
 
-const features = tableFeatures({
-    columnFilteringFeature,
-    columnVisibilityFeature,
-    rowSelectionFeature,
-    filteredRowModel: createFilteredRowModel(),
-})
+// const features = tableFeatures({
+//     columnFilteringFeature,
+//     columnVisibilityFeature,
+//     rowSelectionFeature,
+//     filteredRowModel: createFilteredRowModel(),
+// })
 
 export default function DataTable<TData extends RowData>({
   columns,

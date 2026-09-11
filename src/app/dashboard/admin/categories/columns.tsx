@@ -48,12 +48,15 @@ import {
 import { deleteCategory, getCategory } from "@/queries/category";
 
 // Tanstack React Table
-import { ColumnDef, StockFeatures } from "@tanstack/react-table";
+import { ColumnDef} from "@tanstack/react-table";
 
 // Prisma models
 import { Category } from "@/generated/prisma/client";
 
-export const columns: ColumnDef<StockFeatures, Category>[] = [
+// types
+import { features } from "@/lib/types";
+
+export const columns: ColumnDef<typeof features, Category>[] = [
   {
     accessorKey: "image",
     header: "",
