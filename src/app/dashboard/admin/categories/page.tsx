@@ -12,8 +12,8 @@ export default async function AdminCategoriesPage() {
   // Check if no categories are found
   if(!categories) return null;
 
-  const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
-  if (!CLOUDINARY_UPLOAD_PRESET) return null;
+  // const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
+  // if (!CLOUDINARY_UPLOAD_PRESET) return null;
 
 
   return (
@@ -26,7 +26,7 @@ export default async function AdminCategoriesPage() {
             Create Category
          </>
         }
-        modalChildren={<CategoryDetails upload_preset='CLOUDINARY_UPLOAD_PRESET'/>}
+        modalChildren={<CategoryDetails />}       
         filterValue='name'
         data={categories}
         searchPlaceholder='Search category name...'

@@ -11,7 +11,7 @@ interface ImageUploadProps {
     value: string[];
     type: "standard" | "profile" | "cover";
     dontShowPreview?: boolean;
-    upload_preset: string;
+    //upload_preset: string;
 }
 
 
@@ -22,7 +22,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
     value,
     type,
     dontShowPreview,
-    upload_preset
+    //upload_preset
 }) => {
     const [isMounted, setIsMounted] = useState(false);
 
@@ -34,6 +34,9 @@ const ImageUpload: FC<ImageUploadProps> = ({
     if (!isMounted) {
         return null;
     }
+
+    const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
+    if (!CLOUDINARY_UPLOAD_PRESET) return null;
 
     const onUpload = (result: CloudinaryUploadWidgetResults) => {
         console.log("onUpload result ", result);
@@ -59,7 +62,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
                 />
             }
             
-            <CldUploadWidget uploadPreset={upload_preset} onSuccess={onUpload}>
+            <CldUploadWidget uploadPreset={CLOUDINARY_UPLOAD_PRESET} onSuccess={onUpload}>
                 {({open}) => {
                     const onClick = () => {
                         open();
@@ -69,7 +72,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
                       <>
                         <button
                           type="button"
-                          className="absolute right-0 bottom-6 flex items-center font-medium text-[17px]  h-14 w-14 justify-center  text-white bg-gradient-to-t from-blue-primary to-blue-300 border-none shadow-lg rounded-full hover:shadow-md active:shadow-sm"
+                          className="absolute right-0 bottom-6 flex items-center font-medium text-[17px]  h-14 w-14 justify-center  text-white bg-linear-to-t from-blue-primary to-blue-300 border-none shadow-lg rounded-full hover:shadow-md active:shadow-sm"
                           disabled={disabled}
                           onClick={onClick}
                         >

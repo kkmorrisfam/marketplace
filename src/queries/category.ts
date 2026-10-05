@@ -122,7 +122,7 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
  */
 
 export const getAllCategories = async()=>{
-    // Retrieve all categires from the database
+    // Get all categires from the database
     const categories = await db.category.findMany({
         orderBy: {
             updatedAt: "desc",

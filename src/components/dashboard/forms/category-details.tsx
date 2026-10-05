@@ -25,10 +25,10 @@ import { useRouter } from "next/navigation";
 //interface from Category schema already defined
 interface CategoryDetailsProps {
     data?:Category;
-    upload_preset: string;
+    //upload_preset: string;
 }
 
-const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
+const CategoryDetails: FC<CategoryDetailsProps> = ({data})=>{
     // Hook for routing
     const router = useRouter();
 
@@ -146,7 +146,7 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({data, upload_preset})=>{
                                         ),
                                     ])
                                     }
-                                    upload_preset={upload_preset}
+                                   
                                 />
                               </FormControl>
                             </FormItem>

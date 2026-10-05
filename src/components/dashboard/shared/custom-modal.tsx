@@ -19,6 +19,7 @@ type Props = {
   children: React.ReactNode;
   defaultOpen?: boolean;
   maxWidth?: string;
+ // accessibilityTitle: string;  // do this later?
 };
 
 const CustomModal = ({
@@ -38,9 +39,14 @@ const CustomModal = ({
         )}
       >
         <DialogHeader className="pt-8 text-left">
-          {heading && (
+          {heading ? (
             <DialogTitle className="text-2xl font-bold">{heading}</DialogTitle>
-          )}
+          ) : (
+            <DialogTitle className="sr-only">
+              Dialog
+            </DialogTitle>
+          )
+        }
           {subheading && <DialogDescription>{subheading}</DialogDescription>}
 
           {children}

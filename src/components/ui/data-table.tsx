@@ -27,7 +27,7 @@ import {
   createFilteredRowModel,
   rowSelectionFeature,
 
-
+  // Shadcn changed some things
   //getCoreRowModel,  // included in tableFeatures
   //getFilteredRowModel,  //replaced by CreateFilteredRowModel?
   //useReactTable,  //replaced by ReactTable?
