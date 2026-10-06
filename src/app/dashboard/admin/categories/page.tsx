@@ -1,9 +1,10 @@
-import SubCategoryDetails from '@/components/dashboard/forms/category-details';
+
 import DataTable from '@/components/ui/data-table';
 import { getAllCategories } from '@/queries/category'
-import React from 'react'
+
 import { Plus } from "lucide-react";
 import { columns } from './columns';
+import CategoryDetails from '@/components/dashboard/forms/category-details';
 
 export default async function AdminCategoriesPage() {
   
@@ -26,7 +27,8 @@ export default async function AdminCategoriesPage() {
             Create Category
          </>
         }
-        modalChildren={<SubCategoryDetails />}       
+        modalChildren={<CategoryDetails />}  
+        newTabLink='/dashboard/admin/categories/new'     
         filterValue='name'
         data={categories}
         searchPlaceholder='Search category name...'

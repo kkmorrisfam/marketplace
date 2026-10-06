@@ -44,32 +44,33 @@ export const SubCategoryFormSchema = z.object({
         //required_error: "SubCategory name is required.",
         //invalid_type_error:"SubCategory name must be a string.",
 
-        error: "SubCategory name must be a string.", // new for v.4, but not really necessary because react hook form passes "" not undefined
+        error: "Subcategory name must be a string.", // new for v.4, but not really necessary because react hook form passes "" not undefined
     })
-    .min(1, { message: "SubCategory name is required." })  // replaces above errors
-    .min(2,{message:"SubCategory name must be at least 2 characters long."})
-    .max(50, {message: "SubCategory name cannot exceed 50 characters."})
+    .min(1, { message: "Subcategory name is required." })  // replaces above errors
+    .min(2,{message:"Subcategory name must be at least 2 characters long."})
+    .max(50, {message: "Subcategory name cannot exceed 50 characters."})
     .regex(/^[a-zA-Z0-9\s]+$/, {
       message:
-        "Only letters, numbers, and spaces are allowed in the SubCategory name.",
+        "Only letters, numbers, and spaces are allowed in the subcategory name.",
     }),
    image: z
     .object({
         url: z.string(),
     })
     .array()
-    .length(1,"Choose a sub-category image."),
+    .length(1,"Choose a subcategory image."),
    url: z
     .string()
-    .min(1, {message: "SubCategory url is required"}) 
-    .min(2,{message: "SubCategory url must be at least 2 characters long."})
-    .max(50, {message: "SubCategory url cannot exceed 50 characters."})
+    .min(1, {message: "Subcategory url is required"}) 
+    .min(2,{message: "Subcategory url must be at least 2 characters long."})
+    .max(50, {message: "Subcategory url cannot exceed 50 characters."})
     
     .regex(/^(?!.*(?:[-_ ]){2,})[a-zA-Z0-9_-]+$/, {
       message:
-        "Only letters, numbers, hyphen, and underscore are allowed in the SubCategory url, and consecutive occurrences of hyphens, underscores, or spaces are not permitted.",
+        "Only letters, numbers, hyphen, and underscore are allowed in the subcategory url, and consecutive occurrences of hyphens, underscores, or spaces are not permitted.",
     }),
+   categoryId:z.string(),
    featured: z.boolean().default(false),      
-   categoryId:z.string()  
+   
    // could also use //categoryId: z.string().min(1, {message: "Category is required.",}),
 })

@@ -1,7 +1,7 @@
 "use client"
 
 // Prisma model
-import { SubCategory } from "@/generated/prisma/client";
+import { Category, SubCategory } from "@/generated/prisma/client";
 import { FC, useEffect } from "react";
 
 //form handling utilities
@@ -15,20 +15,23 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ImageUpload from "../shared/image-upload";
-import { upsertCategory } from "@/queries/category";
+import { upsertSubCategory } from "@/queries/subCategory";
 
 // messages
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+
 //interface from Category schema already defined
 interface SubCategoryDetailsProps {
     data?:SubCategory;
+    categories: Category[];
     //upload_preset: string;
 }
 
-const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
+const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data, categories})=>{
     // Hook for routing
     const router = useRouter();
 
@@ -47,12 +50,17 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                 image: data?.image ? [{url:data?.image}] : [],
                 url: data?.url ?? "",
                 featured: data?.featured ?? false,
+                categoryId: data?.categoryId,
             },   
         });
     
 
     // Loading status based on form submission
     const isLoading = form.formState.isSubmitting;
+
+    // *** only use this for testing ***
+    const formData = form.watch();
+    console.log("formData", formData);
 
     // Reset form values when data changes
     useEffect(()=> {
@@ -62,6 +70,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                 image: [{url:data?.image}],
                 url: data?.url,
                 featured: data?.featured,
+                categoryId: data.categoryId,
             })
         }
     }, [data, form])
@@ -73,7 +82,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
           try {
             console.log("FORM VALUES: ", values)
             // Upserting category data
-            const response = await upsertCategory({
+            const response = await upsertSubCategory({
              //id:data?.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
              id: data?.id,   //if data has id, get it
              // form values
@@ -81,6 +90,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
              image: values.image[0].url,
              url: values.url,
              featured: values.featured,
+             categoryId: values.categoryId,
              // use database auto created date/time
              //createdAt: new Date(), 
              //updatedAt: new Date(),
@@ -91,7 +101,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
             // Display success message
             toast.success(
               data?.id
-               ? "Category has been updated."
+               ? "Subcategory has been updated."
                : `Congratulations! "${response?.name}" has been created.`
             );
 
@@ -99,7 +109,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
             if (data?.id) {
               router.refresh();
             } else {
-              router.push("/dashboard/admin/categories");
+              router.push("/dashboard/admin/subCategories");
             }
           } catch (error) {
             // handling form submission errors
@@ -115,11 +125,11 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
     return <AlertDialog>
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Category Information</CardTitle>
+                <CardTitle>Subcategory Information</CardTitle>
                 <CardDescription>
                     {data?.id 
-                        ? `Update ${data?.name} category information.` 
-                        : "Let's create a category. You can edit category settings later from the category page."}
+                        ? `Update ${data?.name} subcategory information.` 
+                        : "Let's create a subcategory. You can edit subcategory settings later from the subcategory page."}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -157,7 +167,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                           name="name"
                           render={({ field })=>(
                             <FormItem className="flex-1">
-                              <FormLabel>Category name</FormLabel>
+                              <FormLabel>Subcategory name</FormLabel>
                               <FormControl>
                                 <Input placeholder="Name" {...field} disabled={isLoading} /> 
                               </FormControl>
@@ -172,15 +182,50 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                           name="url"
                           render={( { field }) => (
                             <FormItem className="flex-1">
-                                <FormLabel>Category url</FormLabel>
+                                <FormLabel>Subcategory url</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="/category-url" {...field} disabled={isLoading}/>                                    
+                                    <Input placeholder="/subcategory-url" {...field} disabled={isLoading}/>                                    
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                           )}
                         />
                         
+                        <FormField                           
+                          control={form.control}
+                          name="categoryId"
+                          render={ ({ field }) => (
+                            <FormItem className="flex-1">
+                                <FormLabel>Category</FormLabel>
+                               
+                                  <Select 
+                                      disabled={isLoading || categories.length==0}
+                                      onValueChange={field.onChange}
+                                      value={field.value}
+                                      defaultValue={field.value}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue defaultValue={field.value} placeholder="Select a category"/>
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {
+                                        categories.map((category) =>(
+                                          <SelectItem key={category.id} value={category.id} >
+                                            {category.name}
+                                          </SelectItem>
+                                        ))
+                                      }
+                                    </SelectContent>
+                                    
+                                  
+                                  </Select>                               
+                                <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+    
                         <FormField 
                           control={form.control}
                           name="featured"
@@ -196,7 +241,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                               <div className="space-y-1 leading-none">
                                 <FormLabel>Featured</FormLabel>
                                 <FormDescription>
-                                    This Category will appear on the home page
+                                    This subcategory will appear on the home page
                                 </FormDescription>
                               </div>
                             </FormItem>
@@ -208,8 +253,8 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({data})=>{
                           {isLoading
                             ? "loading..."
                             : data?.id
-                            ? "Save category information"
-                            : "Create category"
+                            ? "Save subcategory information"
+                            : "Create subcategory"
                           }
                         </Button>
                     </form>

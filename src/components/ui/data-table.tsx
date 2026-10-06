@@ -69,7 +69,7 @@ export default function DataTable<TData extends RowData>({
   columns,
   data,
   filterValue,
-  modalChildren,
+  modalChildren,  
   actionButtonText,
   searchPlaceholder,
   heading,

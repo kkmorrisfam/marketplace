@@ -1,7 +1,14 @@
-import React from 'react'
+import SubCategoryDetails from '@/components/dashboard/forms/subCategory-details'
+import { getAllCategories } from '@/queries/category'
 
-export default function AdminNewSubCategoryPage() {
-  return (
-    <div>Admin New Sub Category Page</div>
+
+
+
+export default async function AdminNewSubCategoryPage() {
+  
+    const categories = await getAllCategories();
+    
+    return (
+    <SubCategoryDetails categories={categories}/>
   )
 }
