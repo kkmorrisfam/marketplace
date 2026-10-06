@@ -1,4 +1,4 @@
-import CategoryDetails from '@/components/dashboard/forms/category-details';
+import SubCategoryDetails from '@/components/dashboard/forms/category-details';
 import DataTable from '@/components/ui/data-table';
 import { getAllCategories } from '@/queries/category'
 import React from 'react'
@@ -26,7 +26,7 @@ export default async function AdminCategoriesPage() {
             Create Category
          </>
         }
-        modalChildren={<CategoryDetails />}       
+        modalChildren={<SubCategoryDetails />}       
         filterValue='name'
         data={categories}
         searchPlaceholder='Search category name...'

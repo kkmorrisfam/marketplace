@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 // Custom components
-import CategoryDetails from "@/components/dashboard/forms/category-details";
+import SubCategoryDetails from "@/components/dashboard/forms/category-details";
 import CustomModal from "@/components/dashboard/shared/custom-modal";
 
 // UI components
@@ -152,7 +152,7 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
                 // Custom modal component
                 <CustomModal>
                   {/* Store details component */}
-                  <CategoryDetails data={{ ...rowData }} />
+                  <SubCategoryDetails data={{ ...rowData }} />
                 </CustomModal>,
                 async () => {
                   return {

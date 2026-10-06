@@ -35,3 +35,41 @@ export const CategoryFormSchema = z.object({
     }),
    featured: z.boolean().default(false),      
 })
+
+// SubCategory form schema using zod
+export const SubCategoryFormSchema = z.object({
+   name:z
+    .string({
+        // no longer needed with zod v.4
+        //required_error: "SubCategory name is required.",
+        //invalid_type_error:"SubCategory name must be a string.",
+
+        error: "SubCategory name must be a string.", // new for v.4, but not really necessary because react hook form passes "" not undefined
+    })
+    .min(1, { message: "SubCategory name is required." })  // replaces above errors
+    .min(2,{message:"SubCategory name must be at least 2 characters long."})
+    .max(50, {message: "SubCategory name cannot exceed 50 characters."})
+    .regex(/^[a-zA-Z0-9\s]+$/, {
+      message:
+        "Only letters, numbers, and spaces are allowed in the SubCategory name.",
+    }),
+   image: z
+    .object({
+        url: z.string(),
+    })
+    .array()
+    .length(1,"Choose a sub-category image."),
+   url: z
+    .string()
+    .min(1, {message: "SubCategory url is required"}) 
+    .min(2,{message: "SubCategory url must be at least 2 characters long."})
+    .max(50, {message: "SubCategory url cannot exceed 50 characters."})
+    
+    .regex(/^(?!.*(?:[-_ ]){2,})[a-zA-Z0-9_-]+$/, {
+      message:
+        "Only letters, numbers, hyphen, and underscore are allowed in the SubCategory url, and consecutive occurrences of hyphens, underscores, or spaces are not permitted.",
+    }),
+   featured: z.boolean().default(false),      
+   categoryId:z.string()  
+   // could also use //categoryId: z.string().min(1, {message: "Category is required.",}),
+})

@@ -73,14 +73,14 @@ export const upsertCategory=async(category: UpsertCategoryInput)=> {
 
         // Upsert category into the database
         // can use this version if I manually create a cuid first, but we're letting the database do it.
-        /*const categoryDetails = await db.category.upsert({
+        /*const SubCategoryDetails = await db.category.upsert({
             where: {
                 id: category.id,                
             },
             update: category,
             create: category,
         });
-        return categoryDetails;
+        return SubCategoryDetails;
         */
         
         // Upsert category into the database

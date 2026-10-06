@@ -85,12 +85,31 @@ model Session {
 }
 
 model Category {
+  id            String        @id @default(cuid())
+  name          String
+  image         String
+  url           String
+  featured      Boolean       @default(false)
+  subCategories SubCategory[] @relation("CategoryToSubCategory")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Categories can have multiple SubCategories,
+// Each SubCategory must have a parent Category
+model SubCategory {
   id       String  @id @default(cuid())
   name     String
   image    String
   url      String
   featured Boolean @default(false)
 
+  categoryId String
+  category   Category @relation("CategoryToSubCategory", fields: [categoryId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
 }
