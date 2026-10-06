@@ -50,6 +50,8 @@ model User {
   accounts OAuthAccount[]
   sessions Session[]
 
+  stores    Store[] @relation("UserStores")
+
   @@index([email]) //make email an indexed field
 }
 
@@ -112,4 +114,39 @@ model SubCategory {
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
+}
+
+enum StoreStatus {
+  PENDING
+  ACTIVE
+  BANNED
+  DISABLED
+}
+
+model Store {
+  id          String  @id @default(cuid())
+  name        String
+  description String @db.Text
+  email       String @unique(
+  phone       String
+  url         String @unique
+  logo        String
+  cover       String
+  status      StoreStatus @default(PENDING)
+  averageRating Float @(0)
+  featured    Boolean @default(false)
+  returnPolicy  String?
+  defaultShippingService  String?
+  defaultShippingFees Float?
+  defaultDeliveryTimeMin  Int?
+  defaultDeliveryTimeMax  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId      String
+  user        User @relation("UserStores", fields: [userId], references: [id])
+
+  @@index([userId])
+
 }

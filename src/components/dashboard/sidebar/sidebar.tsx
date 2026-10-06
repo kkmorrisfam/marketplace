@@ -1,13 +1,20 @@
-import Logo from "@/components/shared/logo";
 //import { FC } from "react";
 import UserInfo from "./user-info";
-import { User } from "@/generated/prisma/client";
+
+// Database
+import { User, Store } from "@/generated/prisma/client";
+
+// Custom UI  Components
+import Logo from "@/components/shared/logo";
 import SidebarNavAdmin from "./nav-admin";
-import { adminDashboardSidebarOptions } from "@/constants/data";
+import { adminDashboardSidebarOptions, SellerDashboardSidebarOptions } from "@/constants/data";
+import SidebarNavSeller from "./nav-seller";
+
 
 interface SidebarProps{
     isAdmin?:boolean;
     user: User;
+    stores?:Store[]; 
 }
 
 export default function Sidebar({ isAdmin, user }: SidebarProps) {
@@ -19,7 +26,7 @@ export default function Sidebar({ isAdmin, user }: SidebarProps) {
          <Logo width="100%" height="180px"/>
          <span className="mt-3" />
          <UserInfo user={user} />
-         {isAdmin && <SidebarNavAdmin menuLinks={adminDashboardSidebarOptions} />}
+         {isAdmin ? <SidebarNavAdmin menuLinks={adminDashboardSidebarOptions} /> : <SidebarNavSeller menuLinks={SellerDashboardSidebarOptions}/>}
         </div>
     );
 }
