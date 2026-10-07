@@ -1,7 +1,10 @@
+import StoreDetails from "@/components/dashboard/forms/store-details"
 
 
 export default function SellerNewStorePage() {
   return (
-    <div className="text-4xl font-bold" >Create New Store Here</div>
+    <div className="max-w-2xl mx-auto py-4">
+        <StoreDetails />
+    </div>
   )
 }
