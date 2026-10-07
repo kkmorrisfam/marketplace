@@ -1,26 +1,32 @@
 "use client"
 
-// Prisma model
+// Prisma model, schema
 import { Store } from "@/generated/prisma/client";
-import { FC, useEffect } from "react";
-
-//form handling utilities
-import * as z from "zod";
-import {useForm} from 'react-hook-form';
 import { StoreFormSchema } from "@/lib/schemas";
+
+// React, Next.js
+import { FC, useEffect } from "react";
+import {useForm} from 'react-hook-form';
+import { useRouter } from "next/navigation";
+
+// utilities
+import * as z from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import ImageUpload from "../shared/image-upload";
+
+// components
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import ImageUpload from "../shared/image-upload";
+import { Textarea } from "@/components/ui/textarea";
+
+// Queries
 import { upsertStore } from "@/queries/store";
 
-// messages
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 //interface from store schema already defined
 interface StoreDetailsProps {
@@ -44,9 +50,14 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
             defaultValues: {
                 // Setting default form values from data (if available)
                 name: data?.name ?? "",
-                image: data?.image ? [{url:data?.image}] : [],
+                description: data?.description,
+                email: data?.email,
+                phone: data?.phone,
+                logo: data?.logo ? [{url:data?.logo}] : [],
+                cover: data?.cover ? [{url:data?.cover}] : [],
                 url: data?.url ?? "",
                 featured: data?.featured ?? false,
+                status: data?.status.toString(),
             },   
         });
     
@@ -58,35 +69,41 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
     useEffect(()=> {
         if (data) {
             form.reset({
-                name: data?.name,
-                image: [{url:data?.image}],
-                url: data?.url,
-                featured: data?.featured,
+                name: data?.name ?? "",
+                description: data?.description,
+                email: data?.email,
+                phone: data?.phone,
+                logo: data?.logo ? [{url:data?.logo}] : [],
+                cover: data?.cover ? [{url:data?.cover}] : [],
+                url: data?.url ?? "",
+                featured: data?.featured ?? false,
+                status: data?.status.toString(),
             })
         }
     }, [data, form])
 
     // Submit handler for form submission
-    // need to conform to name, image, url, featured fields
+    // need to conform to name, logo, url, featured fields
     const handleSubmit = async(values:z.infer<typeof StoreFormSchema>) => {
           // console.log(values);
           try {
             console.log("FORM VALUES: ", values)
             // Upserting Store data
-            const response = await upsertStore({
-             //id:data?.id ? data.id : uuid(), // prisma creates id, so no need to do it here.
-             id: data?.id,   //if data has id, get it
+            const response = await upsertStore({             
+              id: data?.id,   //if data has id, get it
              // form values
-             name: values.name,
-             image: values.image[0].url,
-             url: values.url,
-             featured: values.featured,
-             // use database auto created date/time
-             //createdAt: new Date(), 
-             //updatedAt: new Date(),
+              name: values.name,
+              description: values.description,
+              email: values.email,
+              phone: values.phone,
+              logo: values.logo[0].url,
+              cover: values.cover[0].url,
+              url: values.url,
+              featured: values.featured ?? false,           
+             // use database auto created date/time?
+              //createdAt: new Date(), 
+              //updatedAt: new Date(),
             })
-
-            
 
             // Display success message
             toast.success(
@@ -99,7 +116,7 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
             if (data?.id) {
               router.refresh();
             } else {
-              router.push("/dashboard/admin/categories");
+              router.push("/dashboard/seller/stores");
             }
           } catch (error) {
             // handling form submission errors
@@ -128,30 +145,61 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
                         onSubmit={form.handleSubmit(handleSubmit)}
                         className="space-y-4"
                     >
-                        <FormField 
+                      {/* Logo - Cover*/}
+                      <div className="relative py-2 mb-24">
+                        <FormField                          
                           control={form.control}
-                          name="image"
-                          render={({ field }) => (
-                            <FormItem>
+                          name="logo"
+                          render={({ field })=>(
+                            <FormItem className="absolute -bottom-20 -left-48 z-10 inset-x-96" >
                               <FormControl>
-                                <ImageUpload
-                                    type="profile"
-                                    value={field.value.map((image) => image.url)}
-                                    disabled={isLoading}
-                                    onChange={(url) => field.onChange([{ url }])}
-                                    onRemove={(url) =>
+                                <ImageUpload 
+                                  type="profile"
+                                  value={field.value.map((image) => image.url)}
+                                  disabled={isLoading}
+                                  onChange={(url) => field.onChange([{ url }])}
+                                  onRemove={(url)=>
                                     field.onChange([
-                                        ...field.value.filter(
+                                      ...field.value.filter(
                                         (current) => current.url !== url
-                                        ),
+                                      ),
                                     ])
-                                    }
-                                   
+                                  }
                                 />
                               </FormControl>
+                              <FormMessage />
                             </FormItem>
-                          )}
+                           )
+                          }                        
                         />
+                        <FormField
+                          control={form.control}
+                          name="cover"
+                          render={({ field }) =>(
+                            <FormItem>
+                              <FormControl>
+                                <ImageUpload 
+                                  type="cover"
+                                  value={field.value.map((image)=>image.url)}
+                                  disabled={isLoading}
+                                  onChange={(url) => field.onChange([{ url }])}
+                                  onRemove={(url) =>
+                                    field.onChange([
+                                      ...field.value.filter(
+                                        (current) => current.url !== url
+                                      ),
+                                    ])
+                                  }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} 
+                        />
+                      
+                      </div>  
+                        
+                      {/* Name */}
                         <FormField                         
                           control={form.control}
                           name="name"
@@ -163,9 +211,55 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
                               </FormControl>
                               <FormMessage />
                             </FormItem>
-                          )}
-                            
+                          )}                            
                         />
+
+                       {/* Description*/}
+                        <FormField                         
+                          control={form.control}
+                          name="description"
+                          render={({ field })=>(
+                            <FormItem className="flex-1">
+                              <FormLabel>Store description</FormLabel>
+                              <FormControl>
+                                <Textarea placeholder="Description" {...field} disabled={isLoading} /> 
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}                            
+                        />
+                        
+                      {/* Email - Phone*/}
+                        <div className="flex flex-col gap-6 md:flex-row">
+                        <FormField                         
+                          control={form.control}
+                          name="email"
+                          render={({ field })=>(
+                            <FormItem className="flex-1">
+                              <FormLabel>Store Email</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Email" {...field} type="email" /> 
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}                            
+                        />
+                        <FormField                         
+                          control={form.control}
+                          name="phone"
+                          render={({ field })=>(
+                            <FormItem className="flex-1">
+                              <FormLabel>Store phone number</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Phone" {...field}  /> 
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}                            
+                        />
+                        
+
+                        </div>
 
                         <FormField                           
                           control={form.control}
@@ -174,13 +268,13 @@ const StoreDetails: FC<StoreDetailsProps> = ({data})=>{
                             <FormItem className="flex-1">
                                 <FormLabel>Store url</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="/Store-url" {...field} disabled={isLoading}/>                                    
+                                    <Input placeholder="/store-url" {...field} disabled={isLoading}/>                                    
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                           )}
-                        />
-                        
+                        />                      
+
                         <FormField 
                           control={form.control}
                           name="featured"

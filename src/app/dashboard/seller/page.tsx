@@ -24,7 +24,8 @@ export default async function SellerDashboardPage() {
   })
 
   // if user has no stores, redirect to page to create a new store
-  if(stores===0) {
+  
+  if(stores.length===0) {
     redirect('/dashboard/seller/stores/new');
     return;  //if redirect doesn't work.
   }

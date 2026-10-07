@@ -86,9 +86,9 @@ export const StoreFormSchema = z.object({
     })
     .min(2, {message: "Store name must be at least 2 characters long."})
     .max(50, { message: "Store name cannot exceed 50 characters."})
-    .regex(/^(?!.*(?:[-_ ]){2,})[a-zA-Z0-9_ -]+$/, {
+    .regex(/^(?!.*(?:[-_' ]){2,})[a-zA-Z0-9_' -]+$/, {
       message:
-        "Only letters, numbers, space, hyphen, and underscore are allowed in the store name, and consecutive occurrences of hyphens, underscores, or spaces are not permitted.",
+        "Only letters, numbers, spaces, hyphens, apostrophes and underscores are allowed in the store name, and consecutive occurrences of hyphens, underscores, apostrophes or spaces are not permitted.",
     }),
   description: z
     .string({
@@ -120,7 +120,7 @@ export const StoreFormSchema = z.object({
       })
       .array()
       .max(1, {
-        error: "Please choose only one logo image.",
+        error: "Please choose a logo image.",
       }),
 
     cover: z
@@ -129,7 +129,7 @@ export const StoreFormSchema = z.object({
       })
       .array()
       .max(1, {
-        error: "Please choose only one cover image.",
+        error: "Please choose a cover image.",
       }),
     url: z
       .string()
