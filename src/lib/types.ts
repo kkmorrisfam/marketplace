@@ -36,3 +36,24 @@ export const features = tableFeatures({
 export type SubCategoryWithCategoryType=
 //Prisma.PromiseReturnType< typeof getAllSubCategories>[0];
   Awaited<ReturnType<typeof getAllSubCategories>>[number];  //using [number] because it's the type of an element in the array
+
+// Product + variant
+export type ProductTypeWithVariantType = {
+  productId: string;
+  variantId: string;
+  name: string;
+  description: string;
+  variantName: string;
+  variantDescription: string;
+  images: { id?: string;  url: string }[];
+  categoryId: string;
+  subCategoryId: string;
+  isSale: boolean;
+  brand: string;
+  sku: string;
+  colors: { id?: string; color: string}[];
+  sizes: { size: string; quantity: number; price: number; discount: number}[]
+  keywords: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}

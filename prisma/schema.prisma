@@ -183,11 +183,11 @@ enum ShippingFeeMethod {
 }
 
 model Product {
-  id                          String            @id @default(uuid())
+  id                          String            @id @default(cuid())
   name                        String
   description                 String            @db.LongText
   slug                        String            @unique
-  brand                       String
+  brand                       String?
   rating                      Float             @default(0)
   sales                       Int               @default(0)
   numReviews                  Int               @default(0)
@@ -224,7 +224,7 @@ model Product {
 }
 
 model ProductVariant {
-  id                 String  @id @default(uuid())
+  id                 String  @id @default(cuid())
   variantName        String
   variantDescription String? @db.LongText
   variantImage       String
@@ -235,6 +235,8 @@ model ProductVariant {
   keywords           String
   sales              Int     @default(0)
   weight             Float
+  seoTitle           String
+  seoDescription     String  @db.LongText
 
   productId String
   product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
@@ -252,7 +254,7 @@ model ProductVariant {
 }
 
 model Size {
-  id       String @id @default(uuid())
+  id       String @id @default(cuid())
   size     String
   quantity Int
   price    Float
@@ -270,7 +272,7 @@ model Size {
 }
 
 model ProductVariantImage {
-  id  String @id @default(uuid())
+  id  String @id @default(cuid())
   url String
   alt String @default("")
 
@@ -286,7 +288,7 @@ model ProductVariantImage {
 }
 
 model Color {
-  id   String @id @default(uuid())
+  id   String @id @default(cuid())
   name String
 
   productVariantId String
@@ -299,7 +301,7 @@ model Color {
 }
 
 model OfferTag {
-  id   String @id @default(uuid())
+  id   String @id @default(cuid())
   name String
   url  String @unique
 
@@ -310,7 +312,7 @@ model OfferTag {
 }
 
 model Spec {
-  id    String @id @default(uuid())
+  id    String @id @default(cuid())
   name  String
   value String
 
@@ -328,7 +330,7 @@ model Spec {
 }
 
 model Question {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   question String
   answer   String
@@ -343,7 +345,7 @@ model Question {
 }
 
 model Country {
-  id   String @id @default(uuid())
+  id   String @id @default(cuid())
   name String @unique
   code String @unique
 
@@ -356,7 +358,7 @@ model Country {
 }
 
 model ShippingRate {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   shippingService              String
   shippingFeePerItem           Float
@@ -381,7 +383,7 @@ model ShippingRate {
 }
 
 model FreeShipping {
-  id        String  @id @default(uuid())
+  id        String  @id @default(cuid())
   productId String  @unique
   product   Product @relation("ProductFreeShipping", fields: [productId], references: [id], onDelete: Cascade)
 
@@ -392,7 +394,7 @@ model FreeShipping {
 }
 
 model FreeShippingCountry {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   freeShippingId String
   freeShipping   FreeShipping @relation("FreeShippingCountries", fields: [freeShippingId], references: [id], onDelete: Cascade)
@@ -408,7 +410,7 @@ model FreeShippingCountry {
 }
 
 model Review {
-  id       String @id @default(uuid())
+  id       String @id @default(cuid())
   variant  String
   review   String
   rating   Float
@@ -433,7 +435,7 @@ model Review {
 }
 
 model ReviewImage {
-  id  String @id @default(uuid())
+  id  String @id @default(cuid())
   url String
   alt String @default("")
 
@@ -447,7 +449,7 @@ model ReviewImage {
 }
 
 model Cart {
-  id     String @id @default(uuid())
+  id     String @id @default(cuid())
   userId String @unique
   user   User   @relation("UserCart", fields: [userId], references: [id], onDelete: Cascade)
 
@@ -466,7 +468,7 @@ model Cart {
 }
 
 model CartItem {
-  id          String @id @default(uuid())
+  id          String @id @default(cuid())
   productId   String
   variantId   String
   sizeId      String
@@ -495,7 +497,7 @@ model CartItem {
 }
 
 model ShippingAddress {
-  id        String  @id @default(uuid())
+  id        String  @id @default(cuid())
   firstName String
   lastName  String
   phone     String
@@ -553,7 +555,7 @@ enum PaymentMethod {
 }
 
 model Order {
-  id           String @id @default(uuid())
+  id           String @id @default(cuid())
   shippingFees Float
   subTotal     Float
   total        Float
@@ -580,7 +582,7 @@ model Order {
 }
 
 model OrderGroup {
-  id     String      @id @default(uuid())
+  id     String      @id @default(cuid())
   status OrderStatus @default(Pending)
 
   items OrderItem[] @relation("OrderItemToGroup")
@@ -655,7 +657,7 @@ enum ProductStatus {
 }
 
 model OrderItem {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   productId String
   variantId String
@@ -684,7 +686,7 @@ model OrderItem {
 }
 
 model Wishlist {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   userId String
   user   User   @relation("WishlistToUser", fields: [userId], references: [id], onDelete: Cascade)
@@ -708,7 +710,7 @@ model Wishlist {
 }
 
 model Coupon {
-  id        String @id @default(uuid())
+  id        String @id @default(cuid())
   code      String @unique
   startDate String
   endDate   String
@@ -729,7 +731,7 @@ model Coupon {
 }
 
 model PaymentDetails {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   paymentInetntId String
   paymentMethod   String
