@@ -187,7 +187,7 @@ export const ProductFormSchema = z.object({
     .array()
     .length(1,"Choose a product image.")
     .min(1, "Please upload at least 3 images for the product.")
-    .max(10, "You can upload up to 10 images for the product."),
+    .max(6, "You can upload up to 6 images for the product."),
    categoryId: z    
     .cuid({
       error: "Category Id must be a valid CUID"

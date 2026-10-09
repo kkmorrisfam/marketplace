@@ -5,7 +5,7 @@ import { Category, Store } from "@/generated/prisma/client";
 import { ProductFormSchema } from "@/lib/schemas";
 
 // React, Next.js
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import {useForm} from 'react-hook-form';
 import { useRouter } from "next/navigation";
 
@@ -29,6 +29,7 @@ import { upsertStore } from "@/queries/store";
 
 // Types
 import { ProductTypeWithVariantType } from "@/lib/types";
+import ImagesPreviewGrid from "../shared/images-preview-grid";
 
 
 //interface from store schema already defined
@@ -45,6 +46,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
 })=>{
     // Hook for routing
     const router = useRouter();
+
+     // Temporary state for images
+  const [images, setImages] = useState <{ url: string }[]>([]);
 
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
@@ -155,12 +159,29 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                           render={({ field })=>(
                             <FormItem  >
                               <FormControl>
+                              <>
+                                <ImagesPreviewGrid 
+                                    images={form.getValues().images}
+                                    onRemove={(url) => {
+                                      const updatedImages = images.filter(
+                                        (img) => img.url !== url
+                                      );
+                                      setImages(updatedImages);
+                                      field.onChange(updatedImages);
+                                    }}                                  />
+                                <FormMessage className="mt-4!" />
                                 <ImageUpload
                                   dontShowPreview 
                                   type="standard"
                                   value={field.value.map((image) => image.url)}
                                   disabled={isLoading}
-                                  onChange={(url) => field.onChange([{ url }])}
+                                  onChange={(url) => {
+                                    setImages((prevImages)=>{
+                                      const updatedImages =[...prevImages, {url}];
+                                      field.onChange(updatedImages)
+                                      return updatedImages;
+                                    });
+                                  }}
                                   onRemove={(url)=>
                                     field.onChange([
                                       ...field.value.filter(
@@ -169,8 +190,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     ])
                                   }
                                 />
+                              </>
                               </FormControl>
-                              <FormMessage />
+                              
                             </FormItem>
                            )
                           }                        
