@@ -159,7 +159,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                           render={({ field })=>(
                             <FormItem  >
                               <FormControl>
-                              <>
+                              <div>
                                 <ImagesPreviewGrid 
                                     images={form.getValues().images}
                                     onRemove={(url) => {
@@ -168,7 +168,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                       );
                                       setImages(updatedImages);
                                       field.onChange(updatedImages);
-                                    }}                                  />
+                                    }}   
+                                    colors={colors}
+                                    setColors={setColors}                               />
                                 <FormMessage className="mt-4!" />
                                 <ImageUpload
                                   dontShowPreview 
@@ -190,9 +192,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     ])
                                   }
                                 />
-                              </>
+                              </div>
                               </FormControl>
-                              
+
                             </FormItem>
                            )
                           }                        

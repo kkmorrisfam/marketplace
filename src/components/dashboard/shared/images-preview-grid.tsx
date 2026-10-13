@@ -9,21 +9,25 @@
      .max(10, "You can upload up to 10 images for the product."),
  */
 
-
+// React, Next.js
 import Image from "next/image";
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Trash } from "lucide-react";
 
-import { cn, getGridClassName } from "@/lib/utils";
+//utils
+import { cn, getDominantColors, getGridClassName } from "@/lib/utils";
 
 // image to use when there are no images available
 import ImagePlaceholder from '../../../../public/assets/images/no_image_2.png';
-import { Trash } from "lucide-react";
+
+// components
+import ColorPalette from "./color-palette";
 
 interface ImagesPreviewGridProps{
     images: { url: string }[]; // Array of image URLs
     onRemove: (values: string) => void; // Callback function when an image is removed
-    colors?:{colors:string}[]; // List of colors from form
-    setColors: Dispatch<SetStateAction<{color:string}[]>> // Setter functino for colors
+    colors?:{color:string}[]; // List of colors from form
+    setColors: Dispatch<SetStateAction<{color:string}[]>> // Setter function for colors
 }
 
 const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
@@ -42,7 +46,7 @@ const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
     const [colorPalettes, setColorPalettes] = useState<string[][]>([]);
     useEffect(()=> {
         const fetchColors = async () => {
-            const palettes = await Promise.all(
+            const palettes = await Promise.all(  // map one at a time
                 images.map(async (img) => {
                     try {
                         const colors = await getDominantColors(img.url);
@@ -56,7 +60,9 @@ const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
             setColorPalettes(palettes);
         };
 
-        if (imagesLength > 0 ) {
+        // I changed this to images.length to remove warning.
+        // I may have to change it back to imagesLength, then add imagesLength to dep []
+        if (images.length > 0 ) {
             fetchColors();
         } 
     }, [images]);

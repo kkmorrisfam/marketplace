@@ -1,19 +1,24 @@
 import ProductDetails from "@/components/dashboard/forms/product-details";
 import { getAllCategories } from "@/queries/category";
 
+interface SellerNewProductPageProps {
+  params: Promise<{ storeUrl: string}>;
+}
+
 
 export default async function SellerNewProductPage(
   {
-    params
-  } : {
-    params: { storeUrl: string};
-  }) {
+    params,
+  } : 
+    SellerNewProductPageProps)  {
   
+    const {storeUrl } = await params;
+
   const categories = await getAllCategories();
 
   return (
     <div className="w-full" >
-      <ProductDetails categories={categories} storeUrl={params.storeUrl} />
+      <ProductDetails categories={categories} storeUrl={storeUrl} />
     </div>
   ) 
 }

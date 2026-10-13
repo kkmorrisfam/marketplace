@@ -1,19 +1,20 @@
+// React
 import { Dispatch, FC, SetStateAction } from "react";
 
 //Props definition
 interface ColorPaletteProps {
-  colors?:{colors:string}[]; // Extracted Colors (array of strings)
-  colorsData?:{ color: string}[] // List of selected colors from form
+  extractedColors?:string[]; // Extracted Colors (array of strings)
+  colors?:{ color: string}[] // List of selected colors from form
   setColors: Dispatch<SetStateAction<{color:string}[]>> // Setter functino for colors
 }
 
 // ColorPalette component from displaying a color palette
 const ColorPalette:FC<ColorPaletteProps>= ({
+    extractedColors,
     colors,
-    colorsData,
     setColors,
 }) => {
-    return ()
+    return (<div></div>)
 };
 
 export default ColorPalette;
