@@ -14,7 +14,10 @@ const ColorPalette:FC<ColorPaletteProps>= ({
     colors,
     setColors,
 }) => {
-    return (<div></div>)
+    return (<div className="pt-10 w-75 h-40 rounded-b-md overflow-hidden  " >
+        {/* Color palette container */}
+        <div className="w-[320px] h-40 rounded-md perspective-1000 " ></div>
+    </div>)
 };
 
 export default ColorPalette;

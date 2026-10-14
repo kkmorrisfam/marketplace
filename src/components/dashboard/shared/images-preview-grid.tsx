@@ -12,6 +12,8 @@
 // React, Next.js
 import Image from "next/image";
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+
+// icons
 import { Trash } from "lucide-react";
 
 //utils
@@ -50,6 +52,7 @@ const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
                 images.map(async (img) => {
                     try {
                         const colors = await getDominantColors(img.url);
+                        console.log("Extracted colors for: ", img.url, colors);
                         return colors;
                     } catch (error) {
                         console.error("fetchColors error: ", error);

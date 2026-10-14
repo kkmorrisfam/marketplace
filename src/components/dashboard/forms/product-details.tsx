@@ -48,7 +48,12 @@ const ProductDetails: FC<ProductDetailsProps> = ({
     const router = useRouter();
 
      // Temporary state for images
-  const [images, setImages] = useState <{ url: string }[]>([]);
+    const [images, setImages] = useState <{ url: string }[]>([]);
+
+    // state for colors
+    const [colors, setColors] = useState<{color: string}[]>(
+      data?.colors ?? [{ color: ""}]
+    );
 
     // form hook for managing form state and validation
     // z.infer extracts type from Zod schema
@@ -87,6 +92,15 @@ const ProductDetails: FC<ProductDetailsProps> = ({
             form.reset(data)
         }
     }, [data, form])
+    
+    // Synchronize selected colors with React Hook Form
+    useEffect(() => {
+      form.setValue("colors", colors, {
+        shouldDirty: true,  // tells React Hook form to track whether the color field has changed.
+        shouldValidate: true,  // tells it to validate the updated colors against zod schema.
+      });
+    }, [colors, form]);
+
 
     // Submit handler for form submission
     // need to conform to name, logo, url, featured fields
@@ -161,9 +175,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                               <FormControl>
                               <div>
                                 <ImagesPreviewGrid 
-                                    images={form.getValues().images}
+                                    images={field.value}
                                     onRemove={(url) => {
-                                      const updatedImages = images.filter(
+                                      const updatedImages = field.value.filter(
                                         (img) => img.url !== url
                                       );
                                       setImages(updatedImages);
@@ -177,12 +191,14 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                   type="standard"
                                   value={field.value.map((image) => image.url)}
                                   disabled={isLoading}
-                                  onChange={(url) => {
-                                    setImages((prevImages)=>{
-                                      const updatedImages =[...prevImages, {url}];
-                                      field.onChange(updatedImages)
-                                      return updatedImages;
-                                    });
+                                  onChange={(url)=> {
+                                    
+                                    const updatedImages = [
+                                      ...form.getValues("images"),
+                                      {url},
+                                    ];
+                                    setImages(updatedImages);
+                                    field.onChange(updatedImages);
                                   }}
                                   onRemove={(url)=>
                                     field.onChange([

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { getPalette } from "colorthief";
+import { getPaletteSync } from "colorthief";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -27,27 +27,19 @@ export const getDominantColors = (imgUrl: string): Promise<string[]> => {
     const img = new Image();
     img.crossOrigin = "Anonymous";
      
-    img.onload = async () => {
+    img.onload = () => {
       try {
        
-        const palette = (await getPalette(img, { colorCount: 4})) ?? [];
+        // extract four colors
+        const palette = getPaletteSync(img, {colorCount: 4,}) ?? [] ;
 
+        // convert colors into uppercase hexadecimal strings
         const colors = palette.map((color) => color.hex().toUpperCase());
-
+        
+        // returns a Promise<string[]> of colors
         resolve(colors);
 
-/*  Not using because ColorThief now uses hex not RGB
-        //const colorThief = new ColorThief();
-        const colors = palette.map((color) => {
-          // Convert RGB array to hex string
-          return `#${((1 << 24) + (color[0] << 16) + (color[1] << 8) + color  [2])
-            .toString(16)
-            .slice(1)
-            .toUpperCase()}`;
-             });
-             resolve(colors);
-*/
-        
+     
       } catch (error) {
         reject(error);
       }

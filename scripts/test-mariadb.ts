@@ -20,7 +20,15 @@ async function main() {
   });
 
   const conn = await pool.getConnection();
-  const rows = await conn.query("SELECT 1 AS ok");
+  //const rows = await conn.query("SELECT 1 AS ok");
+  const rows = await conn.query(`
+    SELECT
+      VERSION() AS version,
+      DATABASE() AS database_name,
+      @@port AS port
+  `);
+
+
   conn.release();
   await pool.end();
 
