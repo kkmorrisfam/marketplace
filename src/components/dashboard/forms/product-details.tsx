@@ -30,6 +30,7 @@ import { upsertStore } from "@/queries/store";
 // Types
 import { ProductTypeWithVariantType } from "@/lib/types";
 import ImagesPreviewGrid from "../shared/images-preview-grid";
+import ClickToAddInputs from "./click-to-add";
 
 
 //interface from store schema already defined
@@ -52,7 +53,10 @@ const ProductDetails: FC<ProductDetailsProps> = ({
 
     // state for colors
     const [colors, setColors] = useState<{color: string}[]>(
-      data?.colors ?? [{ color: ""}]
+      data?.colors ?? [{ color: ""}],
+      // [
+      //   {color: "", hex: ""}
+      // ]
     );
 
     // form hook for managing form state and validation
@@ -165,8 +169,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                         onSubmit={form.handleSubmit(handleSubmit)}
                         className="space-y-4"
                     >
-                      {/* Images - colors*/}
+                      {/* Images - colors*/}                       
                       <div className="flex flex-col gap-y-6 xl:flex-row">
+                         {/* Images */}
                         <FormField                          
                           control={form.control}
                           name="images"
@@ -215,6 +220,22 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                            )
                           }                        
                         />
+                        {/* Colors */}                       
+                        <div className="w-full flex flex-col gap-y-3 xl:pl-5">
+                          <ClickToAddInputs
+                            details={data?.colors || colors}
+                            setDetails={setColors}
+                            initialDetail={{ color: "" }}
+                            header="Colors"
+                            colorPicker
+                          /> {/** 
+                          {errors.colors && (
+                            <span className="text-sm font-medium text-destructive">
+                              {errors.colors.message}
+                            </span>
+                          )}
+                            */}
+                        </div>
         
                       </div>
 

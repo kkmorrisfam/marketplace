@@ -18,6 +18,40 @@ const ColorPalette:FC<ColorPaletteProps>= ({
     // State to track the active color
     const [activeColor, setActiveColor] = useState<string>("");
 
+    // Handle Selecting/Adding color to product colors
+    const handleAddProductColor = (color:string)=> {
+      if(!color || !setColors) return;
+
+      // Ensure colorsData is not undefined, defaulting to an empty array if it is
+      const currentColorsData = colors ?? [];    
+
+      // Check if the color already exists in colorsData
+      const existingColor = currentColorsData.find((c)=>color === c.color);
+      if (existingColor) return;
+
+      // Check for empty inputs and remove them
+      const newColors = currentColorsData.filter((c)=> c.color !== "");
+
+      //Add the new color to the colorsData
+      setColors([...newColors, {color: color}]);
+    };
+
+    // Color component for individual color block
+    const Color = ({color}: {color: string}) => {
+      return (
+        <div
+          className="w-20 h-20 cursor-pointer transition-all duration-100 ease-linear relative hover:w-30 hover:duration-300"    
+          style={{backgroundColor: color}}
+          onMouseEnter={()=> setActiveColor(color)}
+          onClick={()=>handleAddProductColor(color)}
+        >
+          {/* Color label */}
+          <div className="w-full h-8 text-center text-xs font-semibold absolute -top-6 text-black" >            
+              {color}
+          </div>
+        </div>
+      )
+    };
 
     return (
     <div className="pt-10 w-75 h-40 rounded-b-md overflow-hidden  " >
@@ -48,7 +82,7 @@ const ColorPalette:FC<ColorPaletteProps>= ({
           {/* Map over colors to display color blocks */}
            {
               extractedColors?.map((color, index)=> (
-                <Color key={index} index={index} color={color} />
+                <Color key={index} color={color} />
               ))
            }
         </div>
@@ -56,20 +90,6 @@ const ColorPalette:FC<ColorPaletteProps>= ({
     </div>)
 };
 
-// Color component for individual color block
-const Color = ({color, index}: {color: string; index: number}) => {
-    return (
-      <div
-        className="w-20 h-20 cursor-pointer transition-all duration-100 ease-linear relative hover:w-30 hover:duration-300"    
-        style={{backgroundColor: color}}
-      >
-         {/* Color label */}
-         <div className="w-full h-8 text-center text-xs font-semibold absolute -top-6 text-black" >            
-            {color}
-         </div>
-      </div>
-    )
 
-}
 
 export default ColorPalette;
