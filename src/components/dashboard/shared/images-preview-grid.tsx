@@ -52,7 +52,7 @@ const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
                 images.map(async (img) => {
                     try {
                         const colors = await getDominantColors(img.url);
-                        console.log("Extracted colors for: ", img.url, colors);
+                        //console.log("Extracted colors for: ", img.url, colors);
                         return colors;
                     } catch (error) {
                         console.error("fetchColors error: ", error);
@@ -111,9 +111,13 @@ const ImagesPreviewGrid:FC<ImagesPreviewGridProps> = ({
                   />
 
                 {/*  Actions */}
-                  <div className={cn("absolute top-0 left-0 right-0 bottom-0 hidden group-hover:flex bg-white/55 cursor-pointer items-center justify-center flex-col gap-y-3 transition-all duration-500 ",{
-                    "pb-[40%]!" : imagesLength===1
-                    })} 
+                  <div 
+                    className={cn(
+                      "absolute top-0 left-0 right-0 bottom-0 hidden group-hover:flex bg-white/55 cursor-pointer  items-center justify-center flex-col gap-y-3 transition-all duration-500",
+                      {
+                        "pb-[40%]!": imagesLength === 1,
+                      }
+                    )}
                   >
                   {/* Color palatte (extract colors) */}
                     <ColorPalette
