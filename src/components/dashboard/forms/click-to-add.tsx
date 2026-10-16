@@ -3,26 +3,18 @@ import React, { FC } from "react";
 
 // Define the interface for each detail object
 export interface Detail {
-  [key:string]: string | number | boolean | undefined;
+  [key:string]: string | number | undefined;
 
 }
 
 // Lifting state up, shared state is maintained by a parent component.
 //Define props for the ClickToAddInputs component
-interface ClickToAddInputsProps {
-  details: Detail[];
-  setDetails: React.Dispatch<React.SetStateAction<Detail[]>>;  // Setter function for details
-  initialDetail?:Detail;  //Optional initial detail object
+interface ClickToAddInputsProps<T extends Detail> {
+  details: T[];
+  setDetails: React.Dispatch<React.SetStateAction<T[]>>;  // Setter function for details
+  initialDetail?:T;  //Optional initial detail object
   header: string;       // Header text for the component
 }
-
-// ClickToAddInputs component definition
-const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
-  details, 
-  setDetails,
-  header,
-  initialDetail = {},
-}) => {
 
   // PlusButton component for adding new details
   const PlusButton = ({ onClick }: {onClick: () => void}) => {
@@ -79,13 +71,56 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
       </button>
     );
   }; // end MinusButton
-  
+
+
+
+// ClickToAddInputs component definition
+const ClickToAddInputs = <T extends Detail,>({
+  details,
+  setDetails,
+  header,
+  initialDetail,
+}: ClickToAddInputsProps<T>) => {
+
+  // Function to handle changes in detail properties
+  const handleDetailChange = (index:number, property:string, value: string | number) => { 
+
+     // Update the details array with the new property value
+    const updatedDetails=details.map((detail,i)=>(
+      i===index ? {...detail, [property]:value} : detail
+    ));
+
+    setDetails(updatedDetails);
+  };
+
+
+  // Add a new detail object to the details array
+  const handleAddDetail = () => {
+    // Add a new detail object to the details array
+    if (initialDetail) {
+      setDetails((prevDetails) => [
+        ...prevDetails,
+        { ...initialDetail },
+      ]);
+    }
+  };
+
+  // Function to handle removal of a detail
+  const handleRemove = (index: number) => {
+    // We must atleast keep one detail we can't delete if it's the only detail available
+    if (details.length === 1) return;
+    // Filter out the detail at the specified index
+    const updatedDetails = details.filter((_, i) => i !== index);
+    setDetails(updatedDetails); // Update the state with the filtered details
+  };
+
+
   return <div className="flex flex-col gap-y-4 ">
     {/* Header */}
     <div>{header}</div>
     {/* Display PlusButton if no details exist */}
-    {details.length===0 && <PlusButton onClick={()=>{}} />}
-    {/* Map through details and render input fields */}
+    {details.length===0 && <PlusButton onClick={handleAddDetail} />}  
+    {/* Map through details and render input fields */} 
     {details.map((detail, index)=>(
       <div key={index} className="flex flex-items-center gap-x-4">
         { 
@@ -99,12 +134,26 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
                 placeholder={property}
                 value={detail[property] as string} 
                 min={typeof detail[property]==="number" ? 0 : undefined}
+                onChange={(e)=>
+                  handleDetailChange(
+                    index, 
+                    property, 
+                    e.target.type==="number" 
+                      ? parseFloat(e.target.value) 
+                      : e.target.value
+                    )
+                  }
               />    
             </div>
           ))
         }
         {/* Show buttons for each row of inputs */}
-        
+        <MinusButton 
+          onClick={()=>{}}
+        />
+        <PlusButton 
+          onClick={handleAddDetail}          
+        />
       </div>
     ))}
   </div>; //final div

@@ -153,6 +153,8 @@ const ProductDetails: FC<ProductDetailsProps> = ({
             })
           }
     }
+    // console.log("*forms watch----->", form.watch());
+    console.log("*colors watch ---->", colors);
     return <AlertDialog>
         <Card className="w-full">
             <CardHeader>
