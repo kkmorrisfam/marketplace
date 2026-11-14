@@ -153,8 +153,17 @@ const ProductDetails: FC<ProductDetailsProps> = ({
             })
           }
     }
+    
+
+    // Whenever colors, sizes, keywords change, we update the form values
+    useEffect(()=> {
+      form.setValue("colors", colors);
+    },[form, colors]);
+
+
     // console.log("*forms watch----->", form.watch());
-    console.log("*colors watch ---->", colors);
+    // console.log("*colors watch ---->", colors);
+    console.log("form colors----->", form.watch().colors);
     return <AlertDialog>
         <Card className="w-full">
             <CardHeader>

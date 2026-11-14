@@ -149,7 +149,7 @@ const ClickToAddInputs = <T extends Detail,>({
         }
         {/* Show buttons for each row of inputs */}
         <MinusButton 
-          onClick={()=>{}}
+          onClick={()=>handleRemove(index)}
         />
         <PlusButton 
           onClick={handleAddDetail}          
